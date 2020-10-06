@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>红绿灯异步编程</title>
+    <style>
+        #container {
+            display: flex;
+        }
+        .circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            opacity: 0.4;
+            margin: 5px;
+        }
+        .red {
+            background-color: red;
+        }
+        .yellow {
+            background-color: yellow;
+        }
+        .green {
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    <div id='container'>
+        <div class="circle red"></div>
+        <div class="circle yellow"></div>
+        <div class="circle green"></div>
+    </div>
+    <script>
+        // 绿 10 黄 2 红 5
+        function showLights() {
+            changeLight(3, 10000)
+                .then(() => {
+                    return changeLight(2, 2000)
+                }).then(() => {
+                    return changeLight(1, 5000)
+                }).then(() => {
+                    showLights()
+                })
+        }
+        function changeLight(type, time) {
+            let doms = document.getElementsByClassName('circle');
+            let container;
+            Object.entries(doms).map(item => {
+                item[1].style.opacity = 0.4;
+            })
+            switch(type) {
+                case 1:
+                   container = 'red';
+                   break;
+                case 2:
+                    container = 'yellow';
+                    break;
+                case 3:
+                    container = 'green';
+                    break;
+                default:
+                
+            }
+            return new Promise((resolve, reject) => {
+                document.getElementsByClassName('' + container)[0].style.opacity = 1;
+                setTimeout(() => {
+                    resolve();
+                }, time);
+            });
+        }
+        showLights()
+    </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五子棋游戏</title>
+    <style>
+        * {
+            margin: 0;
+        }
+        #container {
+            width: 780px;
+            border: 1px solid #ccc;
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 auto;
+        }
+        .cell {
+            margin: 0;
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ccc;
+            background-color: burlywood;
+            display: inline-block;
+            font-size: 50px;
+            line-height: 50px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .white {
+            color: white;
+        }
+        .black {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div id='container'></div>
+    <Script>
+        // 棋盘数据存储
+        let pattern = [];
+        // 下棋的人的标识 1 白色方 2 黑色方
+        let person = 1;
+        // 绘制棋盘
+        function show() {
+            let container = document.getElementById('container');
+            container.innerText = '';
+            for (let i = 0; i < 15; i++) {
+                for (let j = 0; j < 15; j++) {
+                    let item = document.createElement('div');
+                    item.classList.add('cell');
+                    if (pattern[i] !== undefined && pattern[i][j] !== undefined) {
+                        item.innerText = '●';
+                        let className = pattern[i][j] === 1 ? 'white' : 'black';
+                        item.classList.add(className);
+                    }
+                    // 添加监听事件
+                    item.addEventListener('click', () => move(i, j))
+                    container.appendChild(item);
+                }
+            }
+        }
+        // 下棋
+        function move(i, j) {
+            if (pattern[i] === undefined)
+                pattern[i] = [];
+            pattern[i][j] = person;
+            if (checkWinner()) {
+                alert('winner')
+            }
+            person = 3 - person;
+            show();
+        }
+        // 判断胜负
+        function checkWinner() {
+            // 行
+            for (let i = 0; i < 15; i++) {
+                let count = 0;
+                for (let j = 0; j < 15; j++) {
+                   if (pattern[i] === undefined) 
+                        break;
+                    if (pattern[i][j] !== person) {
+                        count = 0;
+                    }
+                    else {
+                        if (count === 4) {
+                            return true;
+                        } else {
+                            count += 1;
+                        }
+                    }
+                }
+            }
+            // 列
+            for (let i = 0; i < 15; i++) {
+                let count = 0;
+                for (let j = 0; j < 15; j++) {
+                    if (pattern[i] === undefined) {
+                        break;
+                    }
+                    if (pattern[j] !== undefined) {
+                        // console.log(pattern[j][i])
+                        if (pattern[j][i] !== person) {
+                            count = 0;
+                        } else {
+                            console.log('count', count)
+                            if (count === 4) {
+                                return true;
+                            } else {
+                                count += 1;
+                            }
+                        }
+                    }
+                }
+            }
+            // 斜方向
+        }
+        show();
+    </Script>
+</body>
+</html>
