@@ -40,6 +40,13 @@
     <Script>
         // 棋盘数据存储
         let pattern = [];
+        for (let i = 0; i < 15; i++) {
+            pattern[i] = [];
+            for (let j = 0; j < 15; j++) {
+                pattern[i][j] = 0;
+            }
+        }
+        console.log(pattern)
         // 下棋的人的标识 1 白色方 2 黑色方
         let person = 1;
         // 绘制棋盘
@@ -50,7 +57,7 @@
                 for (let j = 0; j < 15; j++) {
                     let item = document.createElement('div');
                     item.classList.add('cell');
-                    if (pattern[i] !== undefined && pattern[i][j] !== undefined) {
+                    if (pattern[i] !== undefined && pattern[i][j] !== 0) {
                         item.innerText = '●';
                         let className = pattern[i][j] === 1 ? 'white' : 'black';
                         item.classList.add(className);
@@ -66,8 +73,9 @@
             if (pattern[i] === undefined)
                 pattern[i] = [];
             pattern[i][j] = person;
+            console.log(pattern);
             if (checkWinner()) {
-                alert('winner')
+                alert( (person === 1 ? 'white' :  'black' ) + ' is winner')
             }
             person = 3 - person;
             show();
@@ -114,7 +122,71 @@
                     }
                 }
             }
-            // 斜方向
+            // 正斜面 下方遍历
+            for (let i = 0; i < 15; i++) {
+                let count = 0;
+                let number = 15 - i;
+                for (let j = 0; j < number; j++) {
+                    // debugger;
+                    if (count === 5) {
+                        return true;
+                    }
+                    if (pattern[i+j][j] !== 0)
+                    console.log('site', pattern[j + i][j])
+                    if (pattern[j + i][j] === person) {
+                        count ++;
+                    } else {
+                        count = 0;
+                    }
+                }
+            }
+            // 正斜面 上方遍历
+            for (let i = 0; i < 15; i++) {
+                let count = 0;
+                let number = 15 - i;
+                for (let j = 0; j < number; j++) {
+                    // debugger;
+                    if (count === 5) {
+                        return true;
+                    }
+                    if (pattern[j][j + i] !== 0)
+                    console.log('site', pattern[j][j + i])
+                    if (pattern[j][j + i] === person) {
+                        count ++;
+                    } else {
+                        count = 0;
+                    }
+                }
+            }
+            // 反斜面
+            for (let i = 14; i >= 0; i--) {
+                let count = 0;
+                let number = 15 - i;
+                for (let j = 0; j < number; j++) {
+                    if (pattern[j][j+i] === person) {
+                        count ++;
+                        if (count === 5) {
+                            return true;
+                        }
+                    } else {
+                        count = 0;
+                    }
+                }
+            }
+            for (let i = 14; i >= 0; i--) {
+                let count = 0;
+                let number = 15 - i;
+                for (let j = 0; j < number; j++) {
+                    if (pattern[j+i][j] === person) {
+                        count ++;
+                        if (count === 5) {
+                            return true;
+                        }
+                    } else {
+                        count = 0;
+                    }
+                }
+            }
         }
         show();
     </Script>
