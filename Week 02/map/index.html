@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二叉堆</title>
+</head>
+<body>
+    <script>
+        class BinaryHeap {
+            constructor(data) {
+                this.data = data.slice();
+                this.build();
+            }
+            build() {
+                for (let i = Math.floor(this.data.length / 2); i >= 0; i--) {
+                    this.downAjust(i)
+                }
+            }
+            push(v) {
+                this.data.push(v);
+                this.upAdjust();
+                // console.log(this.data)
+            }
+            take() {
+                return this.data.shift();
+                this.build();
+            }
+            upAdjust() {
+                // debugger;
+                let childrenIndex = this.data.length - 1;
+                let parentIndex = Math.floor((childrenIndex - 1) / 2);
+                let temp = this.data[childrenIndex];
+                while (childrenIndex > 0 && temp < this.data[parentIndex]) {
+                    this.data[childrenIndex] = this.data[parentIndex];
+                    childrenIndex = parentIndex;
+                    parentIndex = Math.floor((childrenIndex - 1) / 2);
+                }
+                this.data[childrenIndex] = temp;
+            }
+            downAjust(index) {
+                let parentIndex = index;
+                let childrenIndex = parentIndex * 2 + 1;
+                let temp = this.data[parentIndex];
+                // console.log(this.data)
+                while (childrenIndex < this.data.length) {
+                    if (childrenIndex + 1 < this.data.length && this.data[childrenIndex + 1] < this.data[childrenIndex]) {
+                        childrenIndex++;
+                    }
+                    if (temp <= this.data[childrenIndex]) {
+                        break;
+                    }
+                    this.data[parentIndex] = this.data[childrenIndex];
+                    parentIndex = childrenIndex;
+                    childrenIndex = 2 * childrenIndex + 1;
+                }
+                this.data[parentIndex] = temp;
+            }
+        }
+    </script>
+</body>
+</html>

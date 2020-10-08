@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地图</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .cell {
+            /* display: inline-block; */
+            line-height: 7px;
+            width: 6px;
+            height: 6px;
+            background-color: gray;
+            border-bottom: solid 1px white;
+            border-right: solid 1px white;
+            vertical-align: top;
+        }
+        #container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 701px;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <button onclick="localStorage['map'] = JSON.stringify(map)">save</button>
+    <button onclick="localStorage.clear()">clear</button>
+    <script>
+        let map = localStorage['map'] ? JSON.parse(localStorage['map']) : Array(10000).fill(0);
+
+        let container = document.getElementById('container');
+        class BinaryHeap {
+            constructor(data, compare) {
+                this.data = data.slice();
+                this.compare = compare;
+                // this.build();
+            }
+            build() {
+                for (let i = Math.floor(this.data.length / 2); i >= 0; i--) {
+                    this.downAjust(i)
+                }
+            }
+            give(v) {
+                this.data.push(v);
+                this.upAdjust();
+                console.log(this.data)
+            }
+            take() {
+                return this.data.shift();
+            }
+            upAdjust() {
+                // debugger;
+                let childrenIndex = this.data.length - 1;
+                let parentIndex = Math.floor((childrenIndex - 1) / 2);
+                let temp = this.data[childrenIndex];
+                while (childrenIndex > 0 && this.compare(temp, this.data[parentIndex]) < 0) {
+                    this.data[childrenIndex] = this.data[parentIndex];
+                    childrenIndex = parentIndex;
+                    parentIndex = Math.floor((childrenIndex - 1) / 2);
+                }
+                this.data[childrenIndex] = temp;
+            }
+            downAjust(index) {
+                let parentIndex = index;
+                let childrenIndex = parentIndex * 2 + 1;
+                let temp = this.data[parentIndex];
+                console.log(this.data)
+                while (childrenIndex < this.data.length) {
+                    if (childrenIndex + 1 < this.data.length && this.compare(this.data[childrenIndex + 1], this.data[childrenIndex]) < 0) {
+                        childrenIndex++;
+                    }
+                    if (this.compare(temp, this.data[childrenIndex]) < 0) {
+                        break;
+                    }
+                    this.data[parentIndex] = this.data[childrenIndex];
+                    parentIndex = childrenIndex;
+                    childrenIndex = 2 * childrenIndex + 1;
+                }
+                this.data[parentIndex] = temp;
+            }
+            length() {
+                return this.data.length;
+            }
+        }
+        // class Sorted {
+        //     constructor(data, comparer) {
+        //         this.data = data.slice();
+        //         this.comparer = comparer || ((a, b) => a -b);
+        //     }
+        //     take() {
+        //         if (!this.data.length)
+        //             return;
+        //         let min = this.data[0];
+        //         let minIndex = 0;
+
+        //         for (let i = 1; i < this.data.length; i++) {
+        //             if (this.comparer(this.data[i], min) < 0) {
+        //                 min = this.data[i];
+        //                 minIndex = i;
+        //             }
+        //         }
+
+        //         this.data[minIndex] = this.data[this.data.length - 1];
+        //         this.data.pop();
+        //         return min;
+        //     }
+        //     give(v) {
+        //         this.data.push(v);
+        //     }
+        //     length() {
+        //         return this.data.length;
+        //     }
+        // }
+        for (let x = 0; x < 100; x++) {
+            for (let y = 0; y < 100; y++) {
+                let cell = document.createElement('div');
+                cell.classList.add('cell');
+                if (map[100*y + x] === 1) 
+                    cell.style.backgroundColor = 'black';
+                cell.addEventListener('mousemove', () => {
+                    if (mousedown) {
+                        if (clear) {
+                            cell.style.backgroundColor = '';
+                            map[100*y + x] = 0;
+                        } else {
+                            cell.style.backgroundColor = 'black';
+                            map[100*y + x] = 1;
+                        }
+                    }
+                })
+                container.appendChild(cell);
+            }
+        }
+        let mousedown = false;
+        let clear = false;
+        document.addEventListener('mousedown', (e) => {
+            mousedown = true;
+            // console.log(e.which)
+            clear = (e.which === 3);
+        })
+        document.addEventListener('mouseup', () => mousedown = false);
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        function sleep(t) {
+            return new Promise((resolve, reject) => {
+                setTimeout(resolve, t);
+            })
+        }
+        async function path(map, start, end) {
+            console.log(start)
+            let table = Object.create(map);
+            // let queue = new Sorted([start], (a, b) => distance(a) - distance(b));
+            let queue = new BinaryHeap([start], (a, b) => distance(a) - distance(b))
+            console.log(queue.length);
+            container.children[end[1]*100+end[0]].style.backgroundColor = 'red';
+            async function insert(x, y, pre) {
+                if (x < 0 || x >= 100 || y < 0 || y >= 100) {
+                    return;
+                }
+                if (table[100*y + x])
+                    return;
+                await sleep(1);
+                container.children[y*100 + x].style.backgroundColor = 'lightgreen';
+                table[y*100 + x] = pre;
+                queue.give([x, y]);
+            }
+            function distance(point) {
+                console.log(point)
+                return (point[0] - end[0]) ** 2 + (point[1] - end[1]) ** 2;
+            }
+            // 广度优先
+            while (queue.length) {
+                let [x, y] = queue.take();
+                console.log(x, y);
+                if (x === end[0] && y === end[1]) {
+                    let path = [];
+                    while(x !== start[0] || y !== start[1]) {
+                        path.push(table[y * 100 + x]);
+                        [x, y] = table[y * 100 + x];
+                        await sleep(30);
+                        container.children[y * 100 + x].style.background = 'purple';
+                    }
+                    // console.log(path);
+                    return path;
+                }
+                await insert(x - 1, y, [x, y]);
+                await insert(x, y - 1, [x, y]);
+                await insert(x + 1, y, [x, y]);
+                await insert(x, y + 1, [x, y]);
+
+                await insert(x -1, y - 1, [x, y]);
+                await insert(x + 1, y - 1, [x, y]);
+                await insert(x - 1, y + 1, [x, y]);
+                await insert(x + 1, y + 1, [x, y]);
+            }
+            return null;
+        }
+    </script>
+</body>
+</html>
