@@ -67,7 +67,7 @@
         // Promise版本
         function sleep(t) {
             return new Promise((resolve, reject) => {
-                setTimout(resolve, t)
+                setTimeout(resolve, t)
             })
         }
         function happen(element, eventName) {
