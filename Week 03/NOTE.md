@@ -12,13 +12,21 @@
 | index | 匹配到的字符位于原始字符串的基于0的索引值 |
 | input | 原始字符串 |
 
-[MDNRegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec)
+[MDN RegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec)
 
 # 词法分析
     词法分析是编译的第一个阶段，主要任务是从左到右逐个字符地对源程序进行扫描，产生一个个单词序列，用于语法分析。
 ## 词法分析程序的输出
     当从语法分析程序接到下一个单词的请求时，词法分析程序从左到右读入源程序的字符流，以识别下一
-    个单词。在识别出单词时同时验证其词法的正确性，词法分析程序将结果以**单词符号**的形式发送至
+    个单词。在识别出单词时同时验证其词法的正确性，词法分析程序将结果以单词符号的形式发送至
     语法分析程序以回应其请求，若在单词识别过程中发现词法错误，则返回出错信息。
-    
+    单词符号一般分为5类：
+    1.关键字（保留字）const let var static等
+    2.标识符，用来表示各种名字
+    3.常数，各种类型的常数
+    4.运算符
+    5.界符（逗号 分号 括号等）
+    词法分析程序输出的单词符号可以采用二元式表示：
+    （单词种别，单词自身的值）
+
     
