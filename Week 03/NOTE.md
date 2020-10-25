@@ -3,4 +3,5 @@
     在设置global或sticky标志位的情况下，js RegExp对象是有状态的。他们会将上次成功匹配的位置记录在lastIndex
     属性中。
     exec()可用来对单个字符创中的多次匹配结果进行逐条的遍历（包括捕获到的匹配）。
-    [MDN RegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec)
+
+[MDNRegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec)
