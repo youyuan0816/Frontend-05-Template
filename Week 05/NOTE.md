@@ -28,5 +28,26 @@
             }
         })
 ```
-                        
-<!-- ![avatar](https://github.com/youyuan0816/Frontend-05-Template/blob/master/Week%2005/image/Proxy.png?raw=true) -->
+        set(target, property, value, receiver) 设置属性值操作的捕获器
+            value 新属性值
+            返回值
+                返回true 代表属性设置成功
+                在严格模式下，如果set方法返回false,那么会抛出一个TypeError异常
+            拦截
+                指定属性值  proxy[foo] = bar proxy.foo = bar
+                指定继承者的属性值 Object.create(proxy)[foo] = bar
+                Reflect.set()
+            约束
+                属性是一个不可写及不可配置的数据属性
+                目标属性没有配置存储方法([[Set]]属性是undefined, 则不能设置它的值)
+                在严格模式下，如果set方法返回false,那么会抛出一个TypeError异常
+```JavaScript
+        var p = new Proxy({}, {
+            set:function(target, prop, value, receiver) {
+                target[prop] = value;
+                return true;
+            }
+        })
+```
+    其他配置       
+![avatar](https://github.com/youyuan0816/Frontend-05-Template/blob/master/Week%2005/image/Proxy.png?raw=true)
