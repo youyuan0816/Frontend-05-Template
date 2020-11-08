@@ -51,3 +51,13 @@
 ```
     其他配置       
 ![avatar](https://github.com/youyuan0816/Frontend-05-Template/blob/master/Week%2005/image/Proxy.png?raw=true)
+
+# 二、Range
+    表示一个包含节点与文本节点的一部分的文档片段
+        可以用 Document 对象的 Document.createRange 方法创建 Range，也可以用 Selection 对象的 getRangeAt 方法获取 Range。另外，还可以通过 Document 对象的构造函数 Range() 来得到 Range
+    Range.setStart()
+        设置 Range 的起点
+    Range.setEnd()
+        设置 Range 的终点
+    Range.getBoundingClientRect()
+        返回单个 ClientRect 对象
