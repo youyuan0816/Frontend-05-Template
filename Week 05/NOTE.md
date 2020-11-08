@@ -21,7 +21,7 @@
             抛出TypeError
                 访问的目标属性是不可写以及不可配置的
                 访问的目标属性没有配置访问方法（get方法是undefined，则返回值必须回为undefined）
-```
+``` Javascript
         let p = new Proxy({}, {
             get(target, prop, receiver) {
                 return target[prop]
