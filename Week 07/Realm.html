@@ -1,0 +1,241 @@
+<!--
+ * @Description: 
+ * @version: 
+ * @Author: youyuan
+ * @Date: 2020-11-22 22:58:06
+ * @LastEdited: 
+ * @LastEditTime: 2020-11-23 02:00:25
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.5.10/dist/g6.min.js"></script>
+    <style>
+        #Minimap{
+            position:absolute;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container" style="width: 100%; height: 100vh;"></div>
+    <div id="Minimap"></div>
+    <script>
+        function getRealmObject() {
+            this.map = new Map()
+            this.set = new Set()
+            this.objectName = [
+                'Array',
+                'ArrayBuffer',
+                'AsyncFunction',
+                'Atomic',
+                'BigInt',
+                'BigInt64Array',
+                'BigUnit64Array',
+                'Boolean',
+                'DataView',
+                'Date',
+                'Error',
+                'EvalError',
+                'FinalzationRegistry',
+                'Float32Array',
+                'Float64Array',
+                'Function',
+                'Generator',
+                'GeneratorFunction',
+                'Infinity',
+                'Int16Array',
+                'Int32Array',
+                'Int8Array',
+                'InternalError',
+                'Intl',
+                'JSON',
+                'Map',
+                'Math',
+                'NaN',
+                'Number',
+                'Object',
+                'Promise',
+                'Proxy',
+                'RangeError',
+                'ReferenceError',
+                'Reflect',
+                'RegExp',
+                'Set',
+                'SharedArrayBuffer',
+                'String',
+                'Symbol',
+                'SyntaxError',
+                'TypeError',
+                'TypeArray',
+                'URIError',
+                'Uint16Array',
+                'Uint32Array',
+                'Uint8Array',
+                'Uint8ClampedArray',
+                'WeakMap',
+                'WeakRef',
+                'WeakSet',
+                'WebAssembly',
+                'decodeURI',
+                'decodeURIComponent',
+                'encodeURI',
+                'encodeURIComponent',
+                'eval',
+                // 'globalThis',
+                'isFinite',
+                'isNaN',
+                'parseFloat',
+                'parseInt'
+            ]
+            let realmRelation = {
+                id: 'tree',
+                children: []
+            }
+            objectName.forEach((name) => {
+                if (window[name]) {
+                    this.set.add(window[name]);
+                    this.map.set(name, window[name]);
+                    realmRelation.children.push({
+                        id: name,
+                        children: []
+                    })
+                }
+            });
+            const childrenQuene = [...realmRelation.children];
+            while (childrenQuene.length) {
+                const child = childrenQuene.shift();
+                const id = child.id;
+                const objectNames = Object.getOwnPropertyNames(this.map.get(id));
+                for (let prop of objectNames) {
+                    const desc = Object.getOwnPropertyDescriptor(this.map.get(id), prop);
+                    if (desc.value && typeof desc.value === 'object' || typeof desc.value === 'function') {
+                        if (!hasTheObject(desc.value)) {
+                            getTreeNode('value', prop, id, desc.value, child);
+                        }
+                    }
+                    if (desc.get) {
+                        if (!hasTheObject(desc.get)) {
+                            getTreeNode('get', prop, id, desc.get, child)
+                        }
+                    }
+                    if (desc.set) {
+                        if (!hasTheObject(desc.set)) {
+                            getTreeNode('set', prop, id, desc.set, child)
+                        }
+                    }
+                }
+            }
+            function hasTheObject(key) {
+                return this.set.has(key);
+            }
+            function getTreeNode(type, prop, id, object, child) {
+                let childId;
+                this.set.add(object);
+                if (type === 'value') {
+                    childId = `${id}.${prop}`
+                } else {
+                    childId = `${id}.${prop}.[${type}]`
+                }
+                this.map.set(childId, object);
+                let node = {
+                    id: childId,
+                    children: []
+                }
+                child.children.push(node);
+                childrenQuene.push(node);
+            }
+            return realmRelation;     
+        }
+        const minimap = new G6.Minimap({
+            container: document.getElementById('Minimap'),
+            size: [300, 100],
+            className: 'minimap',
+            type: 'delegate'
+        })
+        function drawTree(data) {
+            const container = document.getElementById('container');
+            const width = container.scrollWidth;
+            const height = container.scrollHeight;
+            const graph = new G6.TreeGraph({
+                container: container,
+                width: width,
+                height: height,
+                linkCenter: true,
+                modes: {
+                    default: [
+                        {
+                            type: 'collapse-expand',
+                            onChange: function onChange(item, collapse) {
+                                const data = item.get('model').data;
+                                data.collapse = collapse;
+                                return true;
+                            }
+                        },
+                        'drag-canvas',
+                        'zoom-canvas'
+                    ]
+                },
+                defaultNode: {
+                    size: 30,
+                    anchorPoint: [
+                        [0, 0.5],
+                        [1, 0.5]
+                    ]
+                },
+                defaultEdge: {
+                    type: 'cubic-vertical'
+                },
+                layout: {
+                    type: 'compactBox',
+                    direction: 'TB',
+                    getId: (d) => {
+                        return d.id
+                    },
+                    getHeight: () => {
+                        return 16;
+                    },
+                    getWidth: () => {
+                        return 16
+                    },
+                    getVGap: () => {
+                        return 80
+                    },
+                    getHGap: () => {
+                        return 20;
+                    }
+                },
+                plugins: [minimap]
+            })
+            graph.node(function(node) {
+                let position = 'bottom';
+                let rotate = 45;
+                if (!node.children) {
+                    position = 'bottom';
+                    rotate = Math.PI / 2;
+                }
+                return {
+                    label: node.id,
+                    labelCfg: {
+                    position,
+                    offset: 5,
+                    style: {
+                        rotate,
+                        textAlign: 'start',
+                        },
+                    }
+                }
+            })
+
+            graph.data(data);
+            graph.render();
+            graph.fitView();
+        }
+        drawTree(getRealmObject())
+    </script>
+</body>
+</html>
