@@ -63,17 +63,17 @@
     请求行和标题必须以<CR><LF>作为结尾。空行内必须只有<CR><LF>而无其他空格。
     在HTTP/1.1协议中，所有的请求头，除Host外，都是可选的。
 ## 客户端请求
-    `GET / HTTP/1.1`
-    `Host: www.google.com`
+`GET / HTTP/1.1`
+`Host: www.google.com`
 ## 服务器应答
-    ```
-        HTTP/1.1 200 OK
-        Content-Length: 3059
-        Server: GWS/2.0
-        Date: Sat, 11 Jan 2003 02:44:04 GMT
-        Content-Type: text/html
-        Cache-control: private
-        Set-Cookie: PREF=ID=73d4aef52e57bae9:TM=1042253044:LM=1042253044:S=SMCc_HRPCQiqy
-        X9j; expires=Sun, 17-Jan-2038 19:14:07 GMT; path=/; domain=.google.com
-        Connection: keep-alive
-    ```
+```
+    HTTP/1.1 200 OK
+    Content-Length: 3059
+    Server: GWS/2.0
+    Date: Sat, 11 Jan 2003 02:44:04 GMT
+    Content-Type: text/html
+    Cache-control: private
+    Set-Cookie: PREF=ID=73d4aef52e57bae9:TM=1042253044:LM=1042253044:S=SMCc_HRPCQiqy
+    X9j; expires=Sun, 17-Jan-2038 19:14:07 GMT; path=/; domain=.google.com
+    Connection: keep-alive
+```
