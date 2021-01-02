@@ -27,7 +27,56 @@
         lt <
         gt >
 
-## HTML语义化
+## HTML语法
+    合法元素
+        Element: <tagname>...</tagname>
+        Text: text
+        Comment: <!-- comments -->
+        DocumentType: <!Doctype html>
+        ProcessingInstruction: <?a 1?>
+        CDATA:<![CDATA[]]>
+    字符引用
+        &#161;
+        &amp;
+        &lt;
+        &quot;
+
+## 浏览器API
+    DOM
+    BOM 浏览器对象模型
+### DOM API
+    四个部分
+        traversal系列的API 废弃
+        节点部分API(最重要的部分)
+        事件部分(浏览器交互)
+        Range API 更精确的操作DOM元素 应用于编辑器
+
+    事件API
+        target.addEventListener(type, listener [, options]);
+        target.addEventListener(type, listener [, useCapture]);
+        target.addEventListener(type, listener [, useCapture, wantsUntrusted ]); // Gecko/Mozilla only
+
+        type
+            A case-sensitive string representing the event type to listen for.
+        listener
+            The object that receives a notification (an object that implements the Event interface) when an event of the specified type occurs. This must be an object implementing the EventListener interface, or a JavaScript function. See The event listener callback for details on the callback itself.
+        options
+            An options object specifies characteristics about th event listner. The available options are:
+            
+            capture
+                A Boolean indicating that events of this type will be dispatched to the registered listener before being dispatched to any EventTarget beneath it in the DOM tree.
+            once
+                A Boolean indicating that the listner should be invoked at most once after being added. If true, the listener would be automatically removed when invoked.
+            passive
+                A Boolean that, if true, indicates that the function specified by listenner will never call preventDefault(). If a passive listener does call preventDefault(), the user agent will do nothing other than generate a console warning.
+            
+
+            Event：冒泡和捕获
+                捕获： 从外到内，一层一层计算，到底事件发生在哪个元素上
+                冒泡：已经算出点到了哪个元素上，层层向外去触发，然后让这个元素去响应这个事件（默然是冒泡监听）
+                
+
+
     
 #### 资料来源
 [SGML 维基百科 SGML](https://zh.wikipedia.org/wiki/SGML)    
