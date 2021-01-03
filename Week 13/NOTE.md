@@ -74,10 +74,93 @@
             Event：冒泡和捕获
                 捕获： 从外到内，一层一层计算，到底事件发生在哪个元素上
                 冒泡：已经算出点到了哪个元素上，层层向外去触发，然后让这个元素去响应这个事件（默然是冒泡监听）
-                
 
+    Range API
+            The Range constructor returns a newly created Range object whose start and end is the global Document object.
+``` js
+        Range.cloneContents()
+```
+            The Range.cloneContents() returns a DocumentFragment copying the objects of type Node included in the Range.
 
+```js
+        Range.cloneRange()
+```
+            The Range.cloneRange() method returns a Range object with boundary points identical to the cloned Range.
+        
+```js
+        Range.insertNode() 
+```
+            The Range.insertNode() method inserts a node at the start of the Range.
+
+```js
+        Range.selectNode()
+```
+            The Range.selectNode() method sets the Range to contain the Node and its contents. The parent Node of the start and end of the Range will be the same as the parent of the referenceNode.
+
+```js
+        Range.setStart()
+```
+            The Range.setStart() method sets the start position of a Range.
+```js
+        Range.setEnd()
+```
+            The Range.setEnd() method sets the end position of a Range to be located at the given offset into the specified node x.Setting the end point above (higher in the document) than the start point will result in a collapsed range with the start and end points both set to the specified end position.
+ ```js
+        Range.setEndAfter()
+ ```   
+           The Range.setEndAfter() method sets the end position of a Range relative to another Node. The parent Node of end of the Range will be the same as that for the referenceNode
+
+```js
+        Range.setEndBefore()
+```
+           The Range.setEndBefore() method sets the end position of a Range relative to another Node. The parent Node of end of the Range will be the same as that for the referenceNode.
     
+## CSSOM
+        rules
+            document.styleSheets[0].cssRules
+            document.styleSheets[0].insertRule('p {}')
+            document.styleSheets[0].removeRule(0)
+            CSSStyleRule
+            CSSCharsetRule
+            CSSImportRule
+            CSSMediaRule
+            ...
+
+            window.getComputedStyle(elt, pseudoElt)
+            elt 想要获取的dom元素
+            pseudoElt 伪元素
+## CSSOM view
+        window API
+        window.
+                innerHeight
+                innerWidth
+                outerWidth
+                outerHeight
+                devicePixelRatio
+                screen
+                      .width
+                      .height
+                      .availWidth
+                      .availHeight
+        scroll
+            scrollTop
+            scrollLeft
+            scrollWidth
+            scrollHeight
+            scroll(x, y)
+            scrollBy(x, y)
+            scrollIntoView()
+
+        window
+            .scrollX
+            .scrollY
+            .scroll(x, y)
+            .scrollBy(x, y)
+        
+        layout
+            .getClientRects()
+            getBoundingClientRect()
+        
 #### 资料来源
 [SGML 维基百科 SGML](https://zh.wikipedia.org/wiki/SGML)    
 [XML 维基百科 XML 简介 用途](https://zh.wikipedia.org/wiki/XML)
